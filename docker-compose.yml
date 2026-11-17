@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment: { NODE_ENV: production, TZ: Asia/Jakarta, DATA_DIR: /data }
+    volumes: [ "shiftin-data:/data" ]
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: [ "80:80", "443:443" ]
+    env_file: .env
+    volumes: [ "./Caddyfile:/etc/caddy/Caddyfile:ro", "caddy-data:/data" ]
+    depends_on: [ app ]
+volumes: { shiftin-data: {}, caddy-data: {} }
